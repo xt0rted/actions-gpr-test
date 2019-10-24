@@ -6,11 +6,7 @@ var paths = new
     Solution = "./TestProject.sln",
 };
 
-Task("Restore")
-    .Does(() => NuGetRestore(paths.Solution));
-
 Task("Compile")
-    .IsDependentOn("Restore")
     .Does(() =>
     {
         MSBuild(paths.Solution, settings =>
