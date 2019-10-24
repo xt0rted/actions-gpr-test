@@ -1,0 +1,39 @@
+on: push
+
+name: CI
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup .NET Core
+        uses: infin8x/setup-dotnet@master
+        with:
+          dotnet-version: 2.2.402
+          source-url: https://nuget.pkg.github.com
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Setup Nuget.exe
+        uses: warrenbuckley/Setup-Nuget@v1
+
+      - name: Version Info
+        run: |
+          nuget help
+          nuget sources
+          dotnet --version
+        shell: cmd
+
+      - name: NuGet Restore
+        run: nuget restore
+        shell: cmd
+
+      - name: Build Project
+        run: ./build.ps1
+        shell: pwsh
